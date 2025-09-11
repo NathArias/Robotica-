@@ -1,0 +1,116 @@
+<?xml version="1.0" ?>
+<robot name="robot_planar">
+ <!-- =======================
+      DEFINICIÓN DE MATERIALES
+ ======================== -->
+    <material name="green">
+        <color rgba="0 0.5 0 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="0.5 0 0 1"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0 0 0.6 1"/>
+    </material>
+
+
+ <!-- =======================
+      BASE DEL ROBOT
+ ======================== -->
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <!-- Cilindro de radio 0.1 m y altura (length) 0.3 m -->
+                <!-- El eje del cilindro siempre es Z -->
+                <cylinder length="0.3" radius="0.1"/>
+            </geometry>
+            <!-- Como el cilindro se extiende de -0.15 a +0.15 en Z,
+                 este origin lo sube 0.15 m para que apoye en el suelo (z=0) -->
+            <origin rpy="0 0 0" xyz="0 0 0.15"/>
+            <material name="blue"/>
+        </visual>
+    </link>
+
+ <!-- =======================
+      PRIMERA JUNTA (q1)
+ ======================== -->
+    <joint name="q1" type="revolute">
+        <parent link="base_link"/>
+        <child link="l1"/>
+        <limit effort="300" velocity="0.1" lower="-3.1416" upper="3.1416"/>
+        <!-- Rotación alrededor de Z -->
+        <axis xyz="0 0 1"/>
+        <!-- El frame de l1 se coloca en (0,0,0.1) respecto a base_link -->
+        <origin rpy="0 0 0" xyz="0 0 0.1" />
+    </joint>
+
+    <link name="l1">
+        <visual>
+            <geometry>
+                <!-- Caja de 0.5 m en X, 0.1 en Y, 0.2 en Z -->
+                <box size="0.5 0.1 0.2"/>
+            </geometry>
+            <!-- Por defecto la caja está centrada en el frame (de -0.25 a +0.25 en X).
+                 Con xyz="0.25 0 0" la desplazamos medio largo (0.5/2),
+                 de modo que la caja empieza en X=0 y termina en X=0.5 -->
+            <origin rpy="0 0 0" xyz="0.25 0 0"/>
+            <material name="red"/>
+        </visual>
+    </link>
+
+ <!-- =======================
+      SEGUNDA JUNTA (q2)
+ ======================== -->
+    <joint name="q2" type="revolute">
+        <parent link="l1"/>
+        <child link="l2"/>
+        <limit effort="300" velocity="0.1" lower="-3.1416" upper="3.1416"/>
+        <axis xyz="0 0 1"/>
+        <!-- El frame de l2 se coloca en (0.5,0,0) relativo a l1,
+             es decir en el extremo derecho de l1 -->
+        <origin rpy="0 0 0" xyz="0.5 0 0" />
+    </joint>
+
+    <link name="l2">
+        <visual>
+            <geometry>
+                <!-- Caja más corta: 0.2 m en X, 0.1 en Y, 0.2 en Z -->
+                <box size="0.2 0.1 0.2"/>
+            </geometry>
+            <!-- Igual que antes: movemos la caja la mitad de su largo (0.1 m)
+                 para que empiece en X=0 y termine en X=0.2,
+                 respecto al frame de l2 -->
+            <origin rpy="0 0 0" xyz="0.1 0 0"/>
+            <material name="blue"/>
+        </visual>
+    </link>
+
+ <!-- =======================
+      TERCERA JUNTA (q3)
+ ======================== -->
+    <joint name="q3" type="revolute">
+        <parent link="l2"/>
+        <child link="l3"/>
+        <limit effort="300" velocity="0.1" lower="-3.1416" upper="3.1416"/>
+        <axis xyz="0 0 1"/>
+        <!-- El frame de l3 se coloca en (0.2,0,0) relativo a l2,
+             o sea al final de esa caja -->
+        <origin rpy="0 0 0" xyz="0.2 0 0" />
+    </joint>
+
+    <link name="l3">
+        <visual>
+            <geometry>
+                <!-- Otra caja de 0.2 x 0.1 x 0.2 -->
+                <box size="0.2 0.1 0.2"/>
+            </geometry>
+            <!-- Otra vez la desplazamos +0.1 en X,
+                 para que empiece en el frame de l3 y termine 0.2 m más adelante -->
+            <origin rpy="0 0 0" xyz="0.1 0 0"/>
+            <material name="green"/>
+        </visual>
+    </link>
+    
+</robot>
